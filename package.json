@@ -1,8 +1,8 @@
 {
   "name": "facebookauth",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "Exemplo utilizado para aula de Autenticação e Autorização no IGTI",
+  "main": "app.js",
   "dependencies": {
     "cookie-parser": "^1.4.5",
     "ejs": "^1.0.0",
@@ -12,11 +12,22 @@
     "passport-facebook": "^3.0.0",
     "passport-google-oauth20": "^2.0.0"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "nodemon": "^2.0.19"
+  },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon app.js"
   },
   "keywords": [],
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/RuiPSDev/oauth20XPE.git"
+  },
+  "bugs": {
+    "url": "https://github.com/RuiPSDev/oauth20XPE/issues"
+  },
+  "homepage": "https://github.com/RuiPSDev/oauth20XPE#readme"
 }
