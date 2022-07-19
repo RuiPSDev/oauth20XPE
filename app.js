@@ -6,6 +6,7 @@ const express = require("express"),
   config = require("./configuration/config"),
   configFacebook = require("./configuration/configFacebook"),
   app = express();
+require("dotenv").config();
 
 var GoogleStrategy = require("passport-google-oauth20").Strategy;
 var FacebookStrategy = require("passport-facebook").Strategy;
@@ -14,9 +15,9 @@ const PORT = 3000;
 passport.use(
   new GoogleStrategy(
     {
-      clientID: config.api_key,
-      clientSecret: config.api_secret,
-      callbackURL: config.callback_url,
+      clientID: process.env.CLIENT_ID_GG,
+      clientSecret: process.env.CLIENT_SECRET_GG,
+      callbackURL: process.env.CALLBACK_URL_GG,
     },
     function (accessToken, refreshToken, profile, done) {
       return done(null, profile);
@@ -27,16 +28,18 @@ passport.use(
 passport.use(
   new FacebookStrategy(
     {
-      clientID: configFacebook.api_key,
-      clientSecret: configFacebook.api_secret,
-      callbackURL: configFacebook.callback_url,
+      clientID: process.env.CLIENT_ID_FB,
+      clientSecret: process.env.CLIENT_SECRET_FB,
+      callbackURL: process.env.CALLBACK_URL_FB,
     },
-    function(accessToken, refreshToken, profile, cb) {
-      User.findOrCreate({ facebookId: profile.id }, function (err, user) {
+    function (accessToken, refreshToken, profile, done) {
+      return done(null, profile);
+      /*  User.findOrCreate({ facebookId: profile.id }, function (err, user) {
         return cb(err, user);
-      });
+      }); */
     }
-));
+  )
+);
 
 // Passport session setup.
 passport.serializeUser(function (user, done) {
@@ -71,10 +74,10 @@ app.get(
 );
 
 app.get(
-  "/auth/google/callback",
+  "/auth/google/secrets",
   passport.authenticate("google", {
     successRedirect: "/",
-    failureRedirect: "/login",
+    failureRedirect: "/logout",
   }),
   function (req, res) {
     res.redirect("/");
@@ -83,17 +86,11 @@ app.get(
 
 // **********  oAuth2.0 com Facebook **********
 
-app.get(
-  "/auth/facebook",
-  passport.authenticate("facebook", { scope: ["profile"] })
-);
+app.get("/auth/facebook", passport.authenticate("facebook"));
 
 app.get(
-  "/auth/facebook/callback",
-  passport.authenticate("facebook", {
-    successRedirect: "/",
-    failureRedirect: "/login",
-  }),
+  "/auth/facebook/secrets",
+  passport.authenticate("facebook", { failureRedirect: "/logout" }),
   function (req, res) {
     res.redirect("/");
   }
